@@ -1,0 +1,168 @@
+<% content_for :title, "Tasks" %>
+
+<%
+  tasks = @tasks.to_a
+  completed_count = tasks.count { |task| task.status == "completed" }
+  in_progress_count = tasks.count { |task| task.status == "in_progress" }
+  pending_count = tasks.count { |task| task.status == "pending" }
+%>
+
+<div class="mx-auto w-full max-w-7xl mb-10">
+  <% if notice.present? %>
+    <div id="notice" class="mb-6 flex items-center gap-3 rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700 shadow-sm">
+      <svg class="size-5 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.236 4.45L7.53 9.884a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.137-.089l3.75-5.164Z" clip-rule="evenodd" />
+      </svg>
+      <%= notice %>
+    </div>
+  <% end %>
+
+  <header class="mb-8 overflow-hidden rounded-3xl bg-slate-950 px-6 py-8 text-white shadow-xl shadow-slate-200 sm:px-8 lg:flex lg:items-center lg:justify-between lg:px-10">
+    <div class="max-w-2xl">
+      <div class="mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.24em] text-blue-300">
+        <span class="h-px w-8 bg-blue-400"></span>
+        Workspace
+      </div>
+      <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Keep your day moving.</h1>
+      <p class="mt-3 max-w-xl text-sm leading-6 text-slate-300 sm:text-base">
+        A simple place to track the work that matters, see what is underway, and close the loop.
+      </p>
+    </div>
+
+    <%= link_to new_task_path, class: "mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-500 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-blue-950/30 transition hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2 focus:ring-offset-slate-950 lg:mt-0" do %>
+      <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
+      </svg>
+      Add new task
+    <% end %>
+  </header>
+
+  <section aria-label="Task summary" class="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <p class="text-sm font-semibold text-slate-500">Total tasks</p>
+        <span class="flex size-9 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
+          <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M7.5 3.25A2.75 2.75 0 0 1 10.25.5h2.5a2.75 2.75 0 0 1 2.75 2.75v.552c.133.046.263.103.39.17a2.75 2.75 0 0 1 1.36 2.374v8.904A2.75 2.75 0 0 1 14.5 18h-9a2.75 2.75 0 0 1-2.75-2.75V6.346a2.75 2.75 0 0 1 1.36-2.374c.127-.067.257-.124.39-.17V3.25A2.75 2.75 0 0 1 7.25.5h.5a.75.75 0 0 1 0 1.5h-.5A1.25 1.25 0 0 0 6 3.25V4h8v-.75A1.25 1.25 0 0 0 12.75 2h-2.5a.75.75 0 0 1 0-1.5h2.5a2.75 2.75 0 0 1 2.75 2.75v.552c.133.046.263.103.39.17A2.75 2.75 0 0 1 17.25 6.346v8.904A2.75 2.75 0 0 1 14.5 18h-9a2.75 2.75 0 0 1-2.75-2.75V6.346a2.75 2.75 0 0 1 1.36-2.374c.127-.067.257-.124.39-.17Z" clip-rule="evenodd" />
+          </svg>
+        </span>
+      </div>
+      <p class="mt-4 text-3xl font-bold tracking-tight text-slate-900"><%= tasks.size %></p>
+    </div>
+
+    <div class="rounded-2xl border border-amber-100 bg-amber-50 p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <p class="text-sm font-semibold text-amber-700">Pending</p>
+        <span class="flex size-9 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
+          <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-12a.75.75 0 0 0-1.5 0v4c0 .414.336.75.75.75h3a.75.75 0 0 0 0-1.5h-2.25V6Z" clip-rule="evenodd" />
+          </svg>
+        </span>
+      </div>
+      <p class="mt-4 text-3xl font-bold tracking-tight text-amber-950"><%= pending_count %></p>
+    </div>
+
+    <div class="rounded-2xl border border-blue-100 bg-blue-50 p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <p class="text-sm font-semibold text-blue-700">In progress</p>
+        <span class="flex size-9 items-center justify-center rounded-xl bg-blue-100 text-blue-700">
+          <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm-1.28-4.22 4-4a.75.75 0 0 0 0-1.06l-4-4a.75.75 0 0 0-1.06 1.06L11.13 9.25H5.75a.75.75 0 0 0 0 1.5h5.38l-3.47 3.47a.75.75 0 1 0 1.06 1.06Z" clip-rule="evenodd" />
+          </svg>
+        </span>
+      </div>
+      <p class="mt-4 text-3xl font-bold tracking-tight text-blue-950"><%= in_progress_count %></p>
+    </div>
+
+    <div class="rounded-2xl border border-emerald-100 bg-emerald-50 p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <p class="text-sm font-semibold text-emerald-700">Completed</p>
+        <span class="flex size-9 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
+          <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.236 4.45L7.53 9.884a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.137-.089l3.75-5.164Z" clip-rule="evenodd" />
+          </svg>
+        </span>
+      </div>
+      <p class="mt-4 text-3xl font-bold tracking-tight text-emerald-950"><%= completed_count %></p>
+    </div>
+  </section>
+
+  <section>
+    <div class="mb-4 flex items-end justify-between gap-4">
+      <div>
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-blue-600">Task list</p>
+        <h2 class="mt-1 text-2xl font-bold tracking-tight text-slate-900">Your tasks</h2>
+      </div>
+      <p class="hidden text-sm font-medium text-slate-500 sm:block"><%= pluralize(tasks.size, "task") %></p>
+    </div>
+
+    <div id="tasks" class="space-y-4">
+      <% if tasks.any? %>
+        <% tasks.each do |task| %>
+          <%
+            status_styles = case task.status
+                            when "completed"
+                              { badge: "bg-emerald-50 text-emerald-700 ring-emerald-600/20", dot: "bg-emerald-500", label: "Completed" }
+                            when "in_progress"
+                              { badge: "bg-blue-50 text-blue-700 ring-blue-600/20", dot: "bg-blue-500", label: "In progress" }
+                            else
+                              { badge: "bg-amber-50 text-amber-700 ring-amber-600/20", dot: "bg-amber-500", label: task.status.to_s.humanize.presence || "Pending" }
+                            end
+          %>
+
+          <article class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-lg hover:shadow-slate-200/70 sm:p-6">
+            <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+              <div class="min-w-0 flex-1">
+                <div class="mb-3 flex flex-wrap items-center gap-3">
+                  <span class="inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-bold ring-1 ring-inset <%= status_styles[:badge] %>">
+                    <span class="size-1.5 rounded-full <%= status_styles[:dot] %>"></span>
+                    <%= status_styles[:label] %>
+                  </span>
+                  <span class="text-xs font-medium text-slate-400">Created <%= task.created_at.strftime("%b %d, %Y") %></span>
+                </div>
+
+                <h3 class="truncate text-lg font-bold text-slate-900 sm:text-xl"><%= task.title %></h3>
+                <p class="mt-2 line-clamp-2 max-w-3xl text-sm leading-6 text-slate-500"><%= task.description %></p>
+              </div>
+
+              <div class="flex shrink-0 flex-wrap items-center gap-2 border-t border-slate-100 pt-4 lg:border-0 lg:pt-0">
+                <%= link_to task, class: "inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-3 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-300", aria: { label: "View #{task.title}" } do %>
+                  <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path d="M10 3c-4.075 0-7.034 3.31-7.89 4.423a4.147 4.147 0 0 0 0 5.154C2.966 13.69 5.925 17 10 17s7.034-3.31 7.89-4.423a4.147 4.147 0 0 0 0-5.154C17.034 6.31 14.075 3 10 3Zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-1.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
+                  </svg>
+                  View
+                <% end %>
+
+                <%= link_to edit_task_path(task), class: "inline-flex items-center gap-1.5 rounded-lg bg-blue-50 px-3 py-2 text-sm font-bold text-blue-700 transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-200", aria: { label: "Edit #{task.title}" } do %>
+                  <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path d="m13.586 3.586 2.828 2.828-8.121 8.122-3.537.707.708-3.536 8.122-8.121Zm1.414-1.414a2 2 0 0 1 2.828 0 2 2 0 0 1 0 2.828l-.353.354-2.829-2.829L15 2.172Z" />
+                    <path d="M4.5 4A2.5 2.5 0 0 0 2 6.5v9A2.5 2.5 0 0 0 4.5 18h9a2.5 2.5 0 0 0 2.5-2.5V10a.75.75 0 0 0-1.5 0v5.5a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1H10A.75.75 0 0 0 10 4H4.5Z" />
+                  </svg>
+                  Edit
+                <% end %>
+
+                <%= button_to task, method: :delete, class: "inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-red-50 px-3 py-2 text-sm font-bold text-red-700 transition hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-200", data: { turbo_confirm: "Delete \"#{task.title}\"?" }, aria: { label: "Delete #{task.title}" } do %>
+                  <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M8.75 2A1.75 1.75 0 0 0 7 3.75V4H4.75a.75.75 0 0 0 0 1.5h.536l.724 10.138A2.5 2.5 0 0 0 8.504 18h2.992a2.5 2.5 0 0 0 2.494-2.362l.724-10.138h.536a.75.75 0 0 0 0-1.5H13v-.25A1.75 1.75 0 0 0 11.25 2h-2.5ZM11.5 4v-.25a.25.25 0 0 0-.25-.25h-2.5a.25.25 0 0 0-.25.25V4h3Zm-4.71 1.5.716 10.031a1 1 0 0 0 .998.969h2.992a1 1 0 0 0 .998-.969L13.21 5.5H6.79Z" clip-rule="evenodd" />
+                  </svg>
+                  Delete
+                <% end %>
+              </div>
+            </div>
+          </article>
+        <% end %>
+      <% else %>
+        <div class="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center shadow-sm">
+          <span class="mx-auto flex size-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+            <svg class="size-7" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
+            </svg>
+          </span>
+          <h3 class="mt-4 text-lg font-bold text-slate-900">No tasks yet</h3>
+          <p class="mx-auto mt-2 max-w-sm text-sm leading-6 text-slate-500">Create your first task and start turning plans into progress.</p>
+          <%= link_to "Create your first task", new_task_path, class: "mt-6 inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300" %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+</div>

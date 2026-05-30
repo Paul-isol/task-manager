@@ -1,0 +1,40 @@
+<%= form_with(model: task, class: "space-y-6") do |form| %>
+  <% if task.errors.any? %>
+    <div id="error_explanation" class="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+      <h2><%= pluralize(task.errors.count, "error") %> prohibited this task from being saved:</h2>
+
+      <ul class="ml-5 mt-2 list-disc space-y-1">
+        <% task.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title, class: "mb-2 block text-sm font-bold text-slate-700" %>
+    <%= form.text_field :title, class: "block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100", placeholder: "What needs to be done?", autofocus: true %>
+  </div>
+
+  <div>
+    <%= form.label :description, class: "mb-2 block text-sm font-bold text-slate-700" %>
+    <%= form.text_area :description, rows: 5, class: "block w-full resize-y rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100", placeholder: "Add the details that will help you finish this task." %>
+  </div>
+
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div>
+      <%= form.label :status, class: "mb-2 block text-sm font-bold text-slate-700" %>
+      <%= form.select :status, [["Pending", "pending"], ["In progress", "in_progress"], ["Completed", "completed"]], {}, class: "block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" %>
+    </div>
+
+    <div>
+      <%= form.label :user_id, "Owner", class: "mb-2 block text-sm font-bold text-slate-700" %>
+      <%= form.collection_select :user_id, User.order(:user_name), :id, :user_name, { prompt: "Choose an owner" }, class: "block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" %>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-3 pt-2">
+    <%= form.submit class: "cursor-pointer rounded-xl bg-blue-600 px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-200" %>
+    <%= link_to "Cancel", tasks_path, class: "rounded-xl bg-slate-100 px-4 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-200 focus:outline-none focus:ring-4 focus:ring-slate-200" %>
+  </div>
+<% end %>
